@@ -47,7 +47,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <div>
                 <div style={{ fontSize: 10, color: "#A8A29E", textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "var(--font-geist-mono)", marginBottom: 12 }}>Resources</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {[["Datasets", "/datasets"], ["HuggingFace", "https://huggingface.co/abhinavdread"], ["API Reference", "/#api"], ["Architecture", "/#architecture"]].map(([l, h]) => (
+                  {[["Datasets", "/datasets"], ["Pipeline Demo", "/demo"], ["HuggingFace", "https://huggingface.co/abhinavdread"], ["API Reference", "/#api"], ["Architecture", "/#architecture"]].map(([l, h]) => (
                     <a key={l} href={h} target={h.startsWith("http") ? "_blank" : undefined} rel={h.startsWith("http") ? "noopener noreferrer" : undefined}
                       style={{ fontSize: 13, color: "#78716C", textDecoration: "none" }}>{l}</a>
                   ))}

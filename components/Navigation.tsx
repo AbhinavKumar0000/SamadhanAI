@@ -59,6 +59,7 @@ export default function Navigation() {
             { label: "Architecture", href: "/#architecture" },
             { label: "Datasets", href: "/datasets" },
             { label: "API", href: "/#api" },
+            { label: "Pipeline Demo", href: "/demo" },
           ].map(link => (
             <a
               key={link.href}
@@ -177,7 +178,7 @@ export default function Navigation() {
       {/* Mobile menu */}
       {menuOpen && (
         <div style={{ backgroundColor: "#FFFFFF", borderTop: "1px solid #E7E5E4", padding: "12px 24px 16px" }}>
-          {[{ label: "Architecture", href: "/#architecture" }, { label: "Datasets", href: "/datasets" }, { label: "API", href: "/#api" }].map(l => (
+          {[{ label: "Architecture", href: "/#architecture" }, { label: "Datasets", href: "/datasets" }, { label: "API", href: "/#api" }, { label: "Pipeline Demo", href: "/demo" }].map(l => (
             <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
               style={{ display: "block", padding: "8px 0", fontSize: 14, color: "#57534E", textDecoration: "none", borderBottom: "1px solid #F5F5F4" }}>
               {l.label}
