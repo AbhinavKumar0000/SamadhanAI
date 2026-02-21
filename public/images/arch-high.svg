@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 480" style="background:#F8F9FA;font-family:Arial,sans-serif;">
+  <!-- Title -->
+  <text x="550" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">HIGH-LEVEL SYSTEM ARCHITECTURE — SamadhanAI</text>
+
+  <!-- Web App / Mobile App -->
+  <rect x="20" y="80" width="130" height="70" rx="4" fill="#FFF3E0" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="85" y="110" text-anchor="middle" font-size="10" fill="#333">Web App / Mobile App</text>
+  <text x="85" y="124" text-anchor="middle" font-size="9" fill="#666">(UI)</text>
+  <text x="85" y="138" text-anchor="middle" font-size="9" fill="#666">MSME + Buyer Interface</text>
+
+  <!-- API Gateway -->
+  <rect x="200" y="80" width="120" height="70" rx="4" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1.5"/>
+  <text x="260" y="106" text-anchor="middle" font-size="10" fill="#333">API Gateway</text>
+  <text x="260" y="120" text-anchor="middle" font-size="9" fill="#666">(Secure)</text>
+  <text x="260" y="134" text-anchor="middle" font-size="9" fill="#666">Auth + Rate Limit</text>
+  <text x="260" y="148" text-anchor="middle" font-size="9" fill="#666">+ Logging</text>
+
+  <!-- Application Layer box -->
+  <rect x="370" y="50" width="370" height="280" rx="4" fill="none" stroke="#aaa" stroke-width="1" stroke-dasharray="4"/>
+  <text x="555" y="68" text-anchor="middle" font-size="10" fill="#999">APPLICATION LAYER</text>
+
+  <!-- Services list -->
+  <rect x="385" y="80" width="155" height="230" rx="3" fill="#FAFAFA" stroke="#ddd" stroke-width="1"/>
+  <text x="462" y="100" text-anchor="middle" font-size="9" font-weight="bold" fill="#555">Application Services</text>
+  <text x="395" y="120" font-size="8.5" fill="#555">1. Case Intake Service</text>
+  <text x="395" y="138" font-size="8.5" fill="#555">2. Document Processing Service</text>
+  <text x="395" y="156" font-size="8.5" fill="#555">3. Legal Intelligence Service</text>
+  <text x="395" y="174" font-size="8.5" fill="#555">4. Prediction Engine Service</text>
+  <text x="395" y="192" font-size="8.5" fill="#555">5. Negotiation Engine Service</text>
+  <text x="395" y="210" font-size="8.5" fill="#555">6. LLM Drafting Service</text>
+  <text x="395" y="228" font-size="8.5" fill="#555">7. Explainability &amp; Audit Service</text>
+
+  <!-- AI Model Layer -->
+  <rect x="555" y="80" width="175" height="165" rx="3" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="642" y="100" text-anchor="middle" font-size="9" font-weight="bold" fill="#555">AI MODEL LAYER</text>
+  <text x="563" y="118" font-size="8" fill="#555">ASR Model (SarvamAI)</text>
+  <text x="563" y="133" font-size="8" fill="#555">OCR Model (SarvamAI)</text>
+  <text x="563" y="148" font-size="8" fill="#555">Dispute Classification Model (In-House)</text>
+  <text x="563" y="163" font-size="8" fill="#555">Document Completeness Model (In-House)</text>
+  <text x="563" y="178" font-size="8" fill="#555">Outcome Prediction Model (In-House)</text>
+  <text x="563" y="193" font-size="8" fill="#555">Sentiment Model (Fine-tuned)</text>
+  <text x="563" y="208" font-size="8" fill="#555">LLM (RAG-based drafting)</text>
+  <text x="563" y="223" font-size="8" fill="#555">Legal Rule Engine (Deterministic)</text>
+
+  <!-- Data Layer -->
+  <rect x="555" y="260" width="175" height="58" rx="3" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="642" y="278" text-anchor="middle" font-size="8" font-weight="bold" fill="#555">DATA LAYER</text>
+  <text x="563" y="293" font-size="7.5" fill="#555">PostgreSQL | Object Storage | Feature Store</text>
+  <text x="563" y="307" font-size="7.5" fill="#555">Model Registry (MLflow) | Audit Logs</text>
+
+  <!-- MeghRaj Cloud -->
+  <rect x="800" y="80" width="120" height="100" rx="4" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1.5"/>
+  <text x="860" y="110" text-anchor="middle" font-size="10" fill="#333">MeghRaj</text>
+  <text x="860" y="126" text-anchor="middle" font-size="9" fill="#666">Kubernetes Cluster</text>
+  <text x="860" y="155" text-anchor="middle" font-size="8" fill="#999">CLOUD</text>
+
+  <!-- Arrows -->
+  <line x1="150" y1="115" x2="200" y2="115" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="320" y1="115" x2="370" y2="115" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="740" y1="180" x2="800" y2="140" stroke="#999" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="540" y1="180" x2="555" y2="180" stroke="#999" stroke-width="1.2"/>
+
+  <defs>
+    <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#999"/>
+    </marker>
+  </defs>
+</svg>

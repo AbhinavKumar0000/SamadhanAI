@@ -1,0 +1,304 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), 'Fira Code', monospace;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #FFFFFF;
+    color: #1C1917;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background-color: #FEF3C7;
+    color: #78350F;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #FAFAF9;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #D6D3D1;
+    border-radius: 3px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer utilities {
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  /* ── Buttons ───────────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 18px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+    border: 1.5px solid transparent;
+    text-decoration: none;
+  }
+
+  .btn-dark {
+    background-color: #1C1917;
+    color: #FFFFFF !important;
+    border-color: #1C1917;
+  }
+
+  .btn-dark:hover {
+    background-color: #292524;
+    border-color: #292524;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: #1C1917 !important;
+    border-color: #D6D3D1;
+  }
+
+  .btn-outline:hover {
+    background-color: #F5F5F4;
+    border-color: #A8A29E;
+  }
+
+  .btn-amber {
+    background-color: #D97706;
+    color: #FFFFFF !important;
+    border-color: #D97706;
+  }
+
+  .btn-amber:hover {
+    background-color: #B45309;
+    border-color: #B45309;
+  }
+
+  .btn-sm {
+    padding: 6px 13px;
+    font-size: 12.5px;
+  }
+
+  /* ── Typography ────────────────────────────────────────────────────── */
+  .label-tag {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #D97706;
+  }
+
+  .page-title {
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 700;
+    color: #1C1917;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  .section-h2 {
+    font-size: clamp(24px, 2.5vw, 30px);
+    font-weight: 700;
+    color: #1C1917;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+
+  .body-text {
+    font-size: 16px;
+    color: #44403C;
+    line-height: 1.7;
+  }
+
+  .caption-text {
+    font-size: 12px;
+    color: #78716C;
+    line-height: 1.6;
+  }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #78716C;
+  }
+
+  /* ── Cards ─────────────────────────────────────────────────────────── */
+  .card {
+    background-color: #FFFFFF;
+    border: 1px solid #E7E5E4;
+    border-radius: 8px;
+  }
+
+  .card:hover {
+    border-color: #D6D3D1;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  }
+
+  /* ── Badges ────────────────────────────────────────────────────────── */
+  .badge-amber {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    background-color: #FFFBEB;
+    border: 1px solid #FDE68A;
+    color: #92400E;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+  }
+
+  .badge-green {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 10.5px;
+    font-weight: 600;
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    color: #166534;
+    border-radius: 4px;
+  }
+
+  .badge-stone {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: #F5F5F4;
+    border: 1px solid #D6D3D1;
+    color: #57534E;
+    border-radius: 4px;
+  }
+
+  /* ── Code ──────────────────────────────────────────────────────────── */
+  .code-block {
+    background-color: #1C1917;
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.75;
+    color: #D6D3D1;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* ── Method badge ──────────────────────────────────────────────────── */
+  .method-badge {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    background-color: #FFFBEB;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Scrolling marquee for tech stack ─────────────────────────────── */
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marquee-track {
+    display: flex;
+    animation: marquee 28s linear infinite;
+    width: max-content;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  .marquee-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* fade edges */
+  .marquee-wrap::before,
+  .marquee-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .marquee-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, #FFFFFF, transparent);
+  }
+
+  .marquee-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, #FFFFFF, transparent);
+  }
+
+  /* ── Saffron bar ───────────────────────────────────────────────────── */
+  .saffron-bar {
+    width: 36px;
+    height: 2px;
+    background-color: #D97706;
+    border-radius: 1px;
+  }
+
+  /* ── Normal Background ────────────────────────────────────────────── */
+  .hero-container {
+    background-color: #FFFFFF;
+    position: relative;
+  }
+
+  /* ── Normal Panel ─────────────────────────────────────────────────── */
+  .normal-panel {
+    background: #FFFFFF;
+    border: 1px solid #E7E5E4;
+    border-radius: 12px;
+    position: relative;
+  }
+}

@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" style="background:#F8F9FA;font-family:Arial,sans-serif;">
+  <text x="600" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">LOW-LEVEL SYSTEM PIPELINE — SamadhanAI</text>
+
+  <!-- USER INPUT -->
+  <rect x="30" y="50" width="200" height="70" rx="3" fill="none" stroke="#aaa" stroke-width="1" stroke-dasharray="3"/>
+  <text x="130" y="68" text-anchor="middle" font-size="9" font-weight="bold" fill="#666">USER INPUT</text>
+  <rect x="40" y="75" width="65" height="30" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="72" y="94" text-anchor="middle" font-size="8" fill="#555">Text Input</text>
+  <rect x="115" y="75" width="65" height="30" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="147" y="88" text-anchor="middle" font-size="7.5" fill="#555">Voice Input</text>
+  <!-- missing doc icon -->
+  <rect x="190" y="75" width="30" height="30" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="205" y="91" text-anchor="middle" font-size="7" fill="#555">Docs</text>
+
+  <!-- INPUT PROCESSING -->
+  <rect x="30" y="150" width="200" height="90" rx="3" fill="none" stroke="#aaa" stroke-width="1" stroke-dasharray="3"/>
+  <text x="130" y="168" text-anchor="middle" font-size="9" font-weight="bold" fill="#666">INPUT PROCESSING LAYER</text>
+  <rect x="40" y="175" width="80" height="30" rx="2" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1"/>
+  <text x="80" y="188" text-anchor="middle" font-size="7.5" fill="#333">Sarnam AI (ASR)</text>
+  <text x="80" y="198" text-anchor="middle" font-size="7" fill="#666">Voice to Text</text>
+  <rect x="40" y="215" width="80" height="20" rx="2" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="80" y="228" text-anchor="middle" font-size="7.5" fill="#333">Language Detection</text>
+  <rect x="130" y="175" width="90" height="30" rx="2" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1"/>
+  <text x="175" y="188" text-anchor="middle" font-size="7.5" fill="#333">Sarnam OCR Engine</text>
+  <text x="175" y="198" text-anchor="middle" font-size="7" fill="#666">Invoice/PO Text</text>
+
+  <!-- LEGAL INTELLIGENCE -->
+  <rect x="30" y="265" width="200" height="80" rx="3" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="3"/>
+  <text x="130" y="283" text-anchor="middle" font-size="9" font-weight="bold" fill="#F59E0B">LEGAL INTELLIGENCE LAYER</text>
+  <rect x="40" y="290" width="80" height="40" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="80" y="305" text-anchor="middle" font-size="7.5" fill="#333">Dispute Classification</text>
+  <text x="80" y="318" text-anchor="middle" font-size="7" fill="#666">Category Prediction</text>
+  <rect x="130" y="290" width="90" height="40" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="175" y="305" text-anchor="middle" font-size="7.5" fill="#333">Document Completeness</text>
+  <text x="175" y="318" text-anchor="middle" font-size="7" fill="#666">Score &amp; Missing Docs</text>
+
+  <!-- NEGOTIATION ENGINE -->
+  <rect x="300" y="150" width="180" height="140" rx="3" fill="none" stroke="#aaa" stroke-width="1" stroke-dasharray="3"/>
+  <text x="390" y="168" text-anchor="middle" font-size="9" font-weight="bold" fill="#666">NEGOTIATION ENGINE</text>
+  <rect x="315" y="178" width="150" height="35" rx="2" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1"/>
+  <text x="390" y="193" text-anchor="middle" font-size="7.5" fill="#333">Settlement Model</text>
+  <text x="390" y="205" text-anchor="middle" font-size="7" fill="#666">Tone Detection</text>
+  <rect x="315" y="225" width="150" height="55" rx="2" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1"/>
+  <text x="390" y="242" text-anchor="middle" font-size="7.5" fill="#333">Strategy Generator</text>
+  <text x="390" y="254" text-anchor="middle" font-size="7" fill="#666">Settlement Bond</text>
+  <text x="390" y="266" text-anchor="middle" font-size="7" fill="#666">Suggestion</text>
+
+  <!-- OUTCOME ENGINE -->
+  <rect x="300" y="305" width="180" height="100" rx="3" fill="none" stroke="#aaa" stroke-width="1" stroke-dasharray="3"/>
+  <text x="390" y="323" text-anchor="middle" font-size="9" font-weight="bold" fill="#666">OUTCOME ENGINE (HYBRID)</text>
+  <rect x="315" y="330" width="70" height="60" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="350" y="347" text-anchor="middle" font-size="7" fill="#333">Outcome Prediction</text>
+  <text x="350" y="358" text-anchor="middle" font-size="7" fill="#333">Model</text>
+  <text x="350" y="369" text-anchor="middle" font-size="7" fill="#666">Win Probability</text>
+  <rect x="395" y="330" width="75" height="60" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="432" y="347" text-anchor="middle" font-size="7" fill="#333">Legal Rule Engine</text>
+  <text x="432" y="358" text-anchor="middle" font-size="7" fill="#333">Interest &amp; Statutory</text>
+  <text x="432" y="369" text-anchor="middle" font-size="7" fill="#666">Validation</text>
+  <rect x="315" y="395" width="150" height="20" rx="2" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="390" y="408" text-anchor="middle" font-size="7.5" fill="#333">SHAP Explainability &amp; Model Transparency</text>
+
+  <!-- LLM DRAFTING SERVICE -->
+  <rect x="560" y="80" width="400" height="300" rx="3" fill="none" stroke="#90CAF9" stroke-width="1.5" stroke-dasharray="3"/>
+  <text x="760" y="98" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">LLM DRAFTING SERVICE</text>
+
+  <!-- Knowledge Base -->
+  <rect x="575" y="110" width="370" height="50" rx="2" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1"/>
+  <text x="760" y="128" text-anchor="middle" font-size="8" font-weight="bold" fill="#333">Knowledge Base</text>
+  <rect x="585" y="135" width="80" height="18" rx="2" fill="white" stroke="#ddd" stroke-width="1"/>
+  <text x="625" y="147" text-anchor="middle" font-size="7" fill="#333">MSMED Act</text>
+  <rect x="680" y="135" width="100" height="18" rx="2" fill="white" stroke="#ddd" stroke-width="1"/>
+  <text x="730" y="147" text-anchor="middle" font-size="7" fill="#333">Settlement Templates</text>
+  <rect x="795" y="135" width="80" height="18" rx="2" fill="white" stroke="#ddd" stroke-width="1"/>
+  <text x="835" y="147" text-anchor="middle" font-size="7" fill="#333">Prior Awards</text>
+
+  <!-- RAG Pipeline -->
+  <rect x="680" y="175" width="120" height="30" rx="2" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1.5"/>
+  <text x="740" y="194" text-anchor="middle" font-size="8.5" fill="#333">RAG Pipeline</text>
+
+  <!-- LLM Generator -->
+  <rect x="660" y="220" width="160" height="30" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="740" y="239" text-anchor="middle" font-size="8.5" fill="#333">LLM Generator</text>
+
+  <!-- FINAL OUTPUT -->
+  <rect x="560" y="275" width="400" height="95" rx="3" fill="none" stroke="#aaa" stroke-width="1" stroke-dasharray="2"/>
+  <text x="760" y="293" text-anchor="middle" font-size="9" font-weight="bold" fill="#666">FINAL OUTPUT</text>
+  <rect x="572" y="302" width="80" height="58" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="612" y="323" text-anchor="middle" font-size="7.5" fill="#333">Settlement</text>
+  <text x="612" y="335" text-anchor="middle" font-size="7.5" fill="#333">Draft</text>
+  <rect x="660" y="302" width="85" height="58" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="702" y="320" text-anchor="middle" font-size="7" fill="#333">Win Probability</text>
+  <text x="702" y="332" text-anchor="middle" font-size="7" fill="#666">Dashboard</text>
+  <rect x="754" y="302" width="85" height="58" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="796" y="320" text-anchor="middle" font-size="7" fill="#333">Legal Explanation</text>
+  <text x="796" y="332" text-anchor="middle" font-size="7" fill="#666">Trace</text>
+  <rect x="848" y="302" width="100" height="58" rx="2" fill="#FFF9E6" stroke="#F59E0B" stroke-width="1"/>
+  <text x="898" y="320" text-anchor="middle" font-size="7" fill="#333">Negotiation</text>
+  <text x="898" y="332" text-anchor="middle" font-size="7" fill="#666">Suggestions</text>
+
+  <!-- Arrows -->
+  <line x1="130" y1="120" x2="130" y2="150" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="130" y1="240" x2="130" y2="265" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="230" y1="310" x2="300" y2="370" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="230" y1="200" x2="300" y2="220" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="480" y1="270" x2="560" y2="240" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="480" y1="370" x2="560" y2="340" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="740" y1="160" x2="740" y2="175" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="740" y1="205" x2="740" y2="220" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+  <line x1="740" y1="250" x2="740" y2="275" stroke="#999" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+  <defs>
+    <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#999"/>
+    </marker>
+  </defs>
+</svg>
