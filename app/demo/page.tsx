@@ -537,7 +537,7 @@ export default function DemoPage() {
                 >
                   Live Voice Recording (SarvamAI ASR, &lt; 30s)
                 </label>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                   {!isRecording ? (
                     <button
                       type="button"
@@ -548,29 +548,55 @@ export default function DemoPage() {
                       <span style={{ fontSize: 14 }}>●</span> Start Recording
                     </button>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={stopRecording}
-                      className="btn btn-outline btn-sm"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        borderColor: "#DC2626",
-                        color: "#DC2626",
-                      }}
-                    >
-                      <span
+                    <>
+                      <div
                         style={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: "50%",
-                          backgroundColor: "#DC2626",
-                          animation: "pulse 1s infinite",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                          height: 28,
                         }}
-                      />
-                      Stop Recording
-                    </button>
+                        aria-hidden
+                      >
+                        {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+                          <div
+                            key={i}
+                            style={{
+                              width: 4,
+                              height: 12,
+                              borderRadius: 2,
+                              backgroundColor: "#D97706",
+                              transformOrigin: "bottom",
+                              animation: "wave 0.6s ease-in-out infinite",
+                              animationDelay: `${i * 0.07}s`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={stopRecording}
+                        className="btn btn-outline btn-sm"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 6,
+                          borderColor: "#DC2626",
+                          color: "#DC2626",
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: "50%",
+                            backgroundColor: "#DC2626",
+                            animation: "pulse 1s infinite",
+                          }}
+                        />
+                        Stop Recording
+                      </button>
+                    </>
                   )}
                   {voiceFile && !isRecording && (
                     <span style={{ fontSize: 12, color: "#166534" }}>
@@ -592,12 +618,12 @@ export default function DemoPage() {
                     marginBottom: 6,
                   }}
                 >
-                  Document (PDF)
+                  Document (PDF or image)
                 </label>
                 <input
                   ref={docInputRef}
                   type="file"
-                  accept=".pdf,application/pdf"
+                  accept=".pdf,application/pdf,.png,.jpg,.jpeg,image/png,image/jpeg,image/jpg"
                   onChange={(e) => setDocFile(e.target.files?.[0] || null)}
                   style={{ display: "none" }}
                 />
@@ -606,7 +632,7 @@ export default function DemoPage() {
                   onClick={() => docInputRef.current?.click()}
                   className="btn btn-outline btn-sm"
                 >
-                  {docFile ? docFile.name : "Choose PDF"}
+                  {docFile ? docFile.name : "Choose PDF or image"}
                 </button>
               </div>
             )}
@@ -1165,7 +1191,7 @@ export default function DemoPage() {
         )}
       </div>
 
-      <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
+      <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}@keyframes wave{0%,100%{transform:scaleY(0.4)}50%{transform:scaleY(1)}}`}</style>
     </div>
   );
 }

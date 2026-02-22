@@ -106,19 +106,37 @@ export async function POST(req: NextRequest) {
 
     const fileName = file.name || "document.pdf";
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    let buffer = Buffer.from(bytes);
+    let uploadFileName = fileName;
+    let contentType = "application/pdf";
+
+    const lower = fileName.toLowerCase();
+    const isImage =
+      lower.endsWith(".png") ||
+      lower.endsWith(".jpg") ||
+      lower.endsWith(".jpeg") ||
+      file.type?.startsWith("image/");
+
+    if (isImage) {
+      const zip = new AdmZip();
+      const ext = lower.endsWith(".png") ? "png" : lower.endsWith(".jpeg") ? "jpeg" : "jpg";
+      zip.addFile(`image.${ext}`, buffer);
+      buffer = zip.toBuffer();
+      uploadFileName = "images.zip";
+      contentType = "application/zip";
+    }
 
     const jobRes = await createJob();
     const jobId = jobRes.job_id;
     if (!jobId) throw new Error("No job_id in response");
 
-    const uploadRes = await getUploadUrls(jobId, fileName);
+    const uploadRes = await getUploadUrls(jobId, uploadFileName);
     const uploadUrls = uploadRes?.upload_urls;
     if (!uploadUrls || typeof uploadUrls !== "object")
       throw new Error("No upload URLs in response");
 
     const fileDetails =
-      uploadUrls[fileName] ??
+      uploadUrls[uploadFileName] ??
       uploadUrls[Object.keys(uploadUrls)[0]];
     const uploadUrl =
       typeof fileDetails === "object" ? fileDetails?.file_url : null;
@@ -128,7 +146,7 @@ export async function POST(req: NextRequest) {
       method: "PUT",
       body: buffer,
       headers: {
-        "Content-Type": "application/pdf",
+        "Content-Type": contentType,
         "x-ms-blob-type": "BlockBlob",
       },
     });
