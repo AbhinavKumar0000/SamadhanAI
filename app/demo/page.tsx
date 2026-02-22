@@ -32,7 +32,7 @@ const STEPS: { id: StepId; label: string }[] = [
   { id: "m2", label: "M2 Doc Completeness" },
   { id: "m3", label: "M3 Payment Predictor" },
   { id: "m4", label: "M4 Rule Engine" },
-  { id: "rag", label: "RAG Analysis (Gemini)" },
+  { id: "rag", label: "RAG Analysis" },
 ];
 
 export default function DemoPage() {
@@ -389,7 +389,7 @@ export default function DemoPage() {
                     fontFamily: "JetBrains Mono, monospace",
                   }}
                 >
-                  SarvamAI + M1–M4 + Gemini RAG
+                  SarvamAI + M1–M4 + RAG
                 </span>
               </div>
               <h1
@@ -414,7 +414,7 @@ export default function DemoPage() {
                 }}
               >
                 Upload a document, record voice, or type your dispute narrative.
-                The pipeline runs ASR/OCR → M1–M4 → Gemini RAG to produce an
+                The pipeline runs ASR/OCR → M1–M4 → RAG to produce an
                 actionable analysis.
               </p>
             </div>
@@ -1037,7 +1037,7 @@ export default function DemoPage() {
                 color: "#166534",
               }}
             >
-              RAG Analysis (Gemini)
+              RAG Analysis
             </div>
             <div
               className="prose prose-stone prose-sm max-w-none"

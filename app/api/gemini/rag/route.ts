@@ -37,7 +37,7 @@ Write a clear, professional analysis that integrates findings from all four mode
 4. Statutory interest and total payable (from M4)
 5. Recommended next steps
 
-Use plain text with line breaks. Avoid markdown formatting like ** or #. Use simple headings like "Summary:", "Document Status:", etc. Keep under 400 words.`;
+Use plain text with line breaks. Avoid markdown formatting like ** or #. Use simple headings like "Summary:", "Document Status:", etc. Provide a complete analysis for all sections.`;
 
     const models = ["gemini-2.5-flash", "gemini-1.5-flash"];
     let data: { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>; error?: { message?: string } } | null = null;
@@ -53,7 +53,7 @@ Use plain text with line breaks. Avoid markdown formatting like ** or #. Use sim
             contents: [{ parts: [{ text: prompt }] }],
             generationConfig: {
               temperature: 0.3,
-              maxOutputTokens: 1024,
+              maxOutputTokens: 4096,
             },
           }),
         }
