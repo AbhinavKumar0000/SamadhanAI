@@ -1,50 +1,39 @@
 # SamadhanAI
-### AI-Enabled Virtual Negotiation & Dispute Intelligence for MSMEs
 
-## 1. Project Title
-**SamadhanAI** — AI-Enabled Virtual Negotiation & Dispute Intelligence for MSMEs
+## Project Overview
 
----
+SamadhanAI is an AI-enabled system designed to enhance the Online Dispute Resolution (ODR) framework, specifically targeting the delayed payment crisis faced by Micro, Small and Medium Enterprises (MSMEs). The system automates case intake, validates evidence, provides calibrated outcome predictions, and enforces statutory calculations, aligning with the MSMED Act, 2006. It integrates advanced natural language processing (NLP) capabilities with robust rule-based engines and leverages AI models for dispute classification, document completeness checks, and payment outcome prediction.
 
-## 2. Problem Context
+## Architecture
 
-The Micro, Small and Medium Enterprises (MSME) sector in India faces a critical **delayed payment crisis**, with over ₹10 Lakh Crore stuck in disputed invoices. While the **MSMED Act, 2006** provides statutory protection (Sections 15–22), the dispute resolution process via **Micro and Small Enterprise Facilitation Councils (MSEFCs)** is overwhelmed.
+The system is implemented as a full-stack Next.js application, integrating both the user interface and backend API services within a unified codebase. This architecture facilitates a streamlined development and deployment process while maintaining a clear separation of concerns.
 
-*   **Resource-Heavy Resolution:** Manual scrutiny of case documents leads to high rejection rates (~38%) and long pendency.
-*   **Lack of Predictability:** MSMEs lack tools to assess litigation risk or calculate statutory dues accurately.
-*   **Statutory Compliance:** Adjudicators need precise, court-defensible interest calculations (compound interest at 3× RBI Bank Rate) which standard tools cannot provide.
+1.  **Web Application (Next.js):** Provides a comprehensive user interface for claimants and adjudicators, built with React and TypeScript.
+2.  **API Services (Next.js API Routes):** Handles all backend logic, including interactions with various AI models (Gemini, Sarvam, and custom models M1-M4), data processing, and statutory calculations. These routes serve as the central point for all data and intelligence operations.
+3.  **Intelligence Center:** Comprising various AI models and deterministic engines for:
+    *   **Case Intake & Document Processing:** Including Optical Character Recognition (OCR) and completeness checks.
+    *   **Prediction Engine:** Machine learning-based forecasting of dispute outcomes.
+    *   **Legal Rule Engine:** Enforcement of statutory calculations as per the MSMED Act.
+4.  **Data Layer:** Utilizes external databases and object storage for case data, documents, and model registries.
 
-**SamadhanAI** enhances the **Online Dispute Resolution (ODR)** framework by automating case intake, validating evidence, and providing calibrated outcome predictions, directly aligning with the **MSMED Act, 2006**.
+## Features
 
----
+*   **Legal Dispute Classification (M1):** Classifies dispute narratives into statutory categories.
+*   **Document Completeness Engine (M2):** Detects presence and absence of mandatory documents.
+*   **Payment Outcome Prediction (M3):** Predicts the probability of a "Win" or "Loss" for the claimant.
+*   **Legal Rule Engine (M4):** Precisely calculates statutory interest based on the MSMED Act.
+*   **Gemini AI Integration:** Chat and Retrieval-Augmented Generation (RAG) capabilities for enhanced interaction.
+*   **Sarvam AI Integration:** Asr and OCR services for document processing and voice input.
+*   **Interactive UI:** Dedicated pages for model visualization, dataset exploration, and an interactive demo.
+*   **API Explorer:** A component for testing and understanding API interactions.
 
-## 3. System Overview
-
-SamadhanAI operates as a **hybrid deterministic-probabilistic system** orchestrated via a microservices architecture. It combines State-of-the-Art (SOTA) NLP models for unstructured text with rigid deterministic engines for statutory calculations.
-
-### High-Level Architecture
-The system follows a layered architecture designed for **NIC MeghRaj** deployment:
-
-1.  **Web App (Next.js):** Unified interface for claimants and adjudicators.
-2.  **API Gateway:** Centralized security and request routing.
-3.  **Intelligence Center:**
-    *   **Case Intake Service:** Handles raw filings.
-    *   **Document Processing:** OCR and completeness checks.
-    *   **Prediction Engine:** ML-based outcome forecasting.
-    *   **Legal Rule Engine:** Statutory math enforcement.
-4.  **Data Layer:** PostgreSQL (Case Data), Object Storage (Docs), and MLflow (Model Registry).
-
-![High Level Architecture](public/images/arch-high.png)
-
----
-
-## 4. Core Components
+## Core Components
 
 ### 4.1 Legal Dispute Classifier (M1)
-**Model:** Fine-tuned **Longformer** (AllenAI)
-**Purpose:** Classifies unstructured dispute narratives into 6 statutory categories under the MSMED Act.
 
-*   **Why Longformer:** Dispute narratives frequently exceed the 512-token limit of BERT. Longformer’s sliding-window attention scales linearly to 4,096 tokens, preventing context truncation.
+**Model:** Fine-tuned Longformer (AllenAI)
+**Purpose:** Classifies unstructured dispute narratives into 6 statutory categories under the MSMED Act. The Longformer model is used due to its ability to handle long input sequences (up to 4,096 tokens), preventing truncation of crucial context in detailed dispute narratives.
+
 *   **Classes:** `payment_delay`, `contract_breach`, `quality_dispute`, `delivery_failure`, `documentation_dispute`, `statutory_violation`.
 *   **Performance:**
     *   **AUC-ROC:** 0.948
@@ -53,247 +42,425 @@ The system follows a layered architecture designed for **NIC MeghRaj** deploymen
     *   **Latency:** ~38ms
 
 ### 4.2 Document Completeness Engine (M2)
-**Model:** Ensemble of 5 Independent **XGBoost** Classifiers
-**Purpose:** Detects the presence/absence of mandatory documents (Invoice, PO, Challan, GST Certificate, Contract).
 
-*   **Strategy:** Multi-label classification was replaced by 5 independent binary classifiers to maximize precision per document type.
-*   **Explainability:** **SHAP (SHapley Additive exPlanations)** TreeExplainer assigns contribution scores to text features (e.g., "gstin_present" token strongly correlates with GST Certificate presence).
+**Model:** Ensemble of 5 Independent XGBoost Classifiers
+**Purpose:** Detects the presence or absence of mandatory documents such as Invoice, Purchase Order, Challan, GST Certificate, and Contract. This is achieved through independent binary classifiers for each document type to ensure high precision.
+
+*   **Explainability:** Utilizes SHAP (SHapley Additive exPlanations) TreeExplainer to assign contribution scores to text features, aiding in understanding document presence detection.
 *   **Performance:**
     *   **F1 Score:** 0.99 (Aggregate)
-    *   **False Negative Rate:** <1% (Crucial to prevent valid case rejection)
+    *   **False Negative Rate:** <1%
 
 ### 4.3 Payment Outcome Predictor (M3)
-**Model:** **LightGBM** with **Platt Scaling (Isotonic Calibration)**
-**Purpose:** Predicts the probability of a "Win" vs. "Loss" for the claimant.
 
-*   **Calibration:** Raw ML outputs are not probabilities. We use **Platt Scaling** to calibrate scores, ensuring that a 70% confidence score corresponds to a 70% empirical win rate. This is vital for legal defensibility.
+**Model:** LightGBM with Platt Scaling (Isotonic Calibration)
+**Purpose:** Predicts the probability of a "Win" versus "Loss" for the claimant. Platt Scaling is employed to calibrate model outputs, ensuring that predicted probabilities accurately reflect empirical win rates, which is essential for legal defensibility.
+
 *   **Features:** `invoice_amount`, `days_overdue`, `document_completeness_score`, `buyer_category`, `prior_disputes_count`.
 *   **Performance:**
     *   **AUC-ROC:** 0.891
-    *   **Brier Score:** 0.112 (Low score indicates accurate probabilistic predictions)
+    *   **Brier Score:** 0.112
     *   **ECE (Expected Calibration Error):** 0.021
 
 ### 4.4 Legal Rule Engine (M4)
-**Model:** **Deterministic Python Engine** (No ML)
-**Purpose:** Enforces MSMED Act Sections 15–22 for interest calculation.
 
-*   **Why No ML?** Statutory financial liability must be exact. ML approximations are not legally binding.
+**Model:** Deterministic Python Engine
+**Purpose:** Enforces the specific sections of the MSMED Act (Sections 15–22) for accurate interest calculation. This component is deterministic to ensure legal exactitude, as machine learning approximations are not suitable for statutory financial liability.
+
 *   **Logic:**
-    *   **Section 15:** Verifies 45-day payment deadline.
-    *   **Section 16:** Calculates compound interest at **3× RBI Bank Rate** (monthly rests).
-    *   **Section 17:** Aggregates principal + interest.
-*   **Output:** Exact floating-point currency values with a full reasoning trace.
+    *   **Section 15:** Verifies the 45-day payment deadline.
+    *   **Section 16:** Calculates compound interest at 3 times the RBI Bank Rate.
+    *   **Section 17:** Aggregates principal and interest amounts.
+*   **Output:** Provides exact floating-point currency values along with a comprehensive reasoning trace.
 
----
+## Data Engineering Strategy
 
-## 5. Data Engineering Strategy
+*   **Sources:** Case filings from Indian Kanoon and archived orders from MSME Facilitation Councils.
+*   **Curation & Labeling:** Raw text is cleaned using regex pipelines. LLM-assisted labeling (Gemini 1.5 Pro) generates initial weak labels for the dispute classifier, followed by human expert review.
+*   **Splitting:** Data is stratified into 80/10/10 splits to maintain class distribution during training, validation, and testing.
+*   **Privacy:** A PII redaction pipeline removes sensitive information (names, GSTNs, phone numbers) before model training.
 
-*   **Sources:**
-    *   Case filings scraped from **Indian Kanoon**.
-    *   Archived orders from **MSME Facilitation Councils**.
-*   **Curation & Labeling:**
-    *   Raw unstructured text cleaned via regex pipelines.
-    *   **LLM-Assisted Labeling:** Gemini 1.5 Pro used to generate initial weak labels for the 6-class dispute classifier, followed by human expert review (Lawyer-in-the-Loop).
-*   **Splitting:** Stratified 80/10/10 split to maintain class distribution.
-*   **Privacy:** PII redaction pipeline removes names, GSTNs, and phone numbers before training.
+## Evaluation Framework
 
----
+Model evaluation is rigorously conducted using metrics aligned with ODR requirements:
 
-## 6. Evaluation Framework
+| Component               | Primary Metric               | Secondary Metric | Business Impact                                                     |
+| :---------------------- | :--------------------------- | :--------------- | :------------------------------------------------------------------ |
+| **Dispute Classifier**    | **Macro F1**                   | AUC-ROC          | Ensures minority classes (e.g., *Statutory Violation*) are not ignored. |
+| **Doc Completeness**      | **Recall (at fixed precision)** | F1 Score         | Minimizes False Negatives to prevent wrongful case rejection.        |
+| **Payment Predictor**     | **ECE (Calibration Error)**    | Brier Score      | Ensures risk probabilities are realistic for negotiation.           |
+| **Rule Engine**           | **Exact Match (100%)**         | N/A              | Zero tolerance for error in financial liability.                    |
 
-We rigorously evaluate models using metrics aligned with ODR requirements:
+## Technical Robustness
 
-| Component | Primary Metric | Secondary Metric | Business Impact |
-| :--- | :--- | :--- | :--- |
-| **Dispute Classifier** | **Macro F1** | AUC-ROC | Ensures minority classes (e.g., *Statutory Violation*) are not ignored. |
-| **Doc Completeness** | **Recall (at fixed precision)** | F1 Score | Minimizes False Negatives to prevent wrongful case rejection. |
-| **Payment Predictor** | **ECE (Calibration Error)** | Brier Score | Ensures risk probabilities are realistic for negotiation. |
-| **Rule Engine** | **Exact Match (100%)** | N/A | Zero tolerance for error in financial liability. |
-
----
-
-## 7. Technical Robustness
-
-*   **Reproducibility:** All random seeds fixed. Rule engine is version-controlled with RBI rate history.
-*   **Monitoring:** Drifts in `invoice_amount` or `dispute_type` distributions trigger retraining alerts.
-*   **Latency:** All inference endpoints optimized for **<100ms** response time (excluding network overhead).
+*   **Reproducibility:** All random seeds are fixed for consistent results. The Rule Engine is version-controlled and includes RBI rate history.
+*   **Monitoring:** Drifts in `invoice_amount` or `dispute_type` distributions trigger automated retraining alerts.
+*   **Latency:** All inference endpoints are optimized for sub-100ms response times.
     *   Payment Predictor: ~12ms
     *   Rule Engine: ~4ms
 
----
-
-## 8. Responsible AI & Compliance
+## Responsible AI & Compliance
 
 *   **Explainability:**
-    *   **M2 (Docs):** SHAP plots show exactly *which* words triggered a "Document Found" status.
-    *   **M3 (Prediction):** SHAP force plots explain why a case has low win probability (e.g., "Low document completeness score").
-*   **Transparency:** No "black box" decisions. The Rule Engine provides a text-based **Reasoning Trace** citing specific Act sections.
-*   **Data Governance:** Architecture designed for **data residency** within India (NIC/MeghRaj), compliant with the **DPDP Act**.
-*   **Bias Mitigation:** Calibration ensures the model does not systematically under-predict wins for Micro enterprises vs. Medium enterprises.
+    *   **M2 (Document Completeness):** SHAP plots illustrate features contributing to document detection.
+    *   **M3 (Payment Predictor):** SHAP force plots explain factors influencing win probability.
+*   **Transparency:** The Rule Engine provides a text-based Reasoning Trace, citing specific sections of the MSMED Act.
+*   **Data Governance:** The architecture supports data residency within India (NIC/MeghRaj) and complies with the DPDP Act.
+*   **Bias Mitigation:** Calibration techniques ensure fair predictions across different enterprise categories.
 
----
+## Tech Stack
 
-## 9. Deployment Architecture
+### Model Development
 
-The system is deployed as a cluster of **FastAPI** microservices, currently hosted on **HuggingFace Spaces** for demonstration, containerized with **Docker**.
+*   **Longformer:** For Legal Dispute Classification (M1).
+*   **XGBoost:** For Document Completeness Engine (M2).
+*   **LightGBM:** For Payment Outcome Predictor (M3).
+*   **Deterministic Python:** For Legal Rule Engine (M4).
+*   **Inference:** ONNX Runtime / PyTorch.
 
-*   **Frontend:** Next.js 14 (React 19)
-*   **Backend:** Python 3.10 + FastAPI
-*   **Inference:** ONNX Runtime / PyTorch
-*   **Scaling:** Stateless design allows horizontal scaling via Kubernetes (K8s).
+### Backend / API
 
----
+*   **Next.js API Routes:** Framework for building serverless API endpoints.
+*   **TypeScript:** Primary language for development.
+*   **Node.js:** Runtime environment.
 
-## 10. API Endpoints
+### Deployment
 
-### 10.1 Legal Dispute Classifier
-**POST** `/predict`
+*   **Vercel:** Preferred platform for Next.js application deployment.
+*   **Docker:** Containerization for consistent environments.
+
+### MLOps / LLMOps
+
+*   **MLflow:** For model registry and experiment tracking (as implied by monitoring).
+*   **Automated Monitoring:** For data and model drift detection.
+
+### Agentic Framework
+
+*   **Google Gemini AI:** Utilized for chat and Retrieval-Augmented Generation (RAG) capabilities.
+
+## Installation
+
+### Prerequisites
+
+*   Node.js v18+
+*   npm (usually comes with Node.js)
+*   Git
+
+### Local Setup
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone [repository-url]
+    cd website
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Environment Variables:** Create a `.env.local` file in the root of the `website` directory and add necessary environment variables (e.g., API keys for Gemini, Sarvam, or other services). A sample `.env.local.example` might be provided for reference.
+
+    ```
+    # Example .env.local content
+    NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+    NEXT_PUBLIC_SARVAM_API_KEY=your_sarvam_api_key
+    ```
+
+4.  **Run the development server:**
+
+    ```bash
+    npm run dev
+    ```
+
+    The application will be accessible at `http://localhost:3000`.
+
+### Docker Build
+
+To build and run the application using Docker:
+
+1.  **Build the Docker image:**
+
+    ```bash
+    docker build -t samadhanai-website .
+    ```
+
+2.  **Run the Docker container:**
+
+    ```bash
+    docker run -p 3000:3000 samadhanai-website
+    ```
+
+    The application will be accessible at `http://localhost:3000`.
+
+## Usage
+
+Access the web interface at `http://localhost:3000` after installation to interact with the system.
+
+### API Endpoints
+
+The following API endpoints are available within the Next.js application:
+
+#### Gemini Chat
+
+**POST** `/api/gemini/chat`
 
 ```json
-// Request
+// Request Example
+{
+  "prompt": "What is the MSMED Act?"
+}
+
+// Response Example
+{
+  "response": "The MSMED Act, 2006 (Micro, Small and Medium Enterprises Development Act) is an act enacted by the Parliament of India to promote, facilitate and develop the competitiveness of micro, small and medium enterprises."
+}
+```
+
+#### Gemini RAG
+
+**POST** `/api/gemini/rag`
+
+```json
+// Request Example
+{
+  "query": "Summarize the dispute regarding invoice INV-2023-005.",
+  "context": "The invoice INV-2023-005 for 1,50,000 INR was due on Jan 10, 2023. Buyer claims quality issues. Seller states goods were delivered as per specification."
+}
+
+// Response Example
+{
+  "response": "The dispute centers on invoice INV-2023-005, totaling 1,50,000 INR, which was due on January 10, 2023. The buyer alleges quality issues, while the seller maintains that the goods were delivered according to specifications."
+}
+```
+
+#### Legal Dispute Classifier (M1)
+
+**POST** `/api/models/m1`
+
+```json
+// Request Example
 {
   "text": "Buyer defaulted on Invoice INV-2024-001 dated 15-Jan-2024. Rs 2,50,000 outstanding."
 }
 
-// Response
+// Response Example
 {
   "label": "payment_delay",
   "confidence": 0.847,
-  "probabilities": { "payment_delay": 0.847, "contract_breach": 0.053, ... }
+  "probabilities": { "payment_delay": 0.847, "contract_breach": 0.053, "quality_dispute": 0.035, "delivery_failure": 0.021, "documentation_dispute": 0.02, "statutory_violation": 0.004 }
 }
 ```
 
-### 10.2 Document Completeness
-**POST** `/evaluate-case`
+#### Document Completeness Engine (M2)
+
+**POST** `/api/models/m2`
 
 ```json
-// Request
+// Request Example
 {
-  "text": "Invoice INV-001 attached. PO-876 included. Contract missing."
+  "text_document_extract": "This document contains invoice number INV-001 and PO-876. Contract details are missing."
 }
 
-// Response
+// Response Example
 {
   "completeness_score": 0.75,
   "missing_documents": ["contract"],
-  "present_documents": ["invoice", "po", "gst", "delivery_challan"]
+  "present_documents": ["invoice", "po"]
 }
 ```
 
-### 10.3 Legal Rule Engine
-**POST** `/evaluate-case`
+#### Payment Outcome Predictor (M3)
+
+**POST** `/api/models/m3`
 
 ```json
-// Request
+// Request Example
+{
+  "features": {
+    "invoice_amount": 250000,
+    "days_overdue": 67,
+    "document_completeness_score": 0.9,
+    "buyer_category": "Large",
+    "prior_disputes_count": 1
+  }
+}
+
+// Response Example
+{
+  "probability_win": 0.72,
+  "prediction": "Win"
+}
+```
+
+#### Legal Rule Engine (M4)
+
+**POST** `/api/models/m4`
+
+```json
+// Request Example
 {
   "invoice_amount": 250000,
   "days_overdue": 67,
   "rbi_bank_rate_pct": 6.5
 }
 
-// Response
+// Response Example
 {
-  "statutory_interest_rs": 8945,
-  "total_payable_rs": 258945,
+  "statutory_interest_rs": 8945.32,
+  "total_payable_rs": 258945.32,
   "reasoning_trace": [
-    "Section 16: Statutory rate = 3 × 6.5% = 19.5%",
-    "Interest = 250000 * 19.5% * 67/365"
+    "Section 16: Statutory rate = 3 * 6.5% = 19.5%",
+    "Interest = 250000 * (19.5/100) * (67/365) = 8945.32"
   ]
 }
 ```
 
----
+#### Sarvam ASR
 
-## 11. Repository Structure
+**POST** `/api/sarvam/asr`
+
+```json
+// Request Example (assuming base64 encoded audio or URL to audio file)
+{
+  "audio_data_base64": "..."
+}
+
+// Response Example
+{
+  "transcribed_text": "The buyer confirmed the payment will be delayed."
+}
+```
+
+#### Sarvam OCR
+
+**POST** `/api/sarvam/ocr`
+
+```json
+// Request Example (assuming base64 encoded image or URL to image file)
+{
+  "image_data_base64": "..."
+}
+
+// Response Example
+{
+  "extracted_text": "Invoice Number: INV-2024-001\nAmount: 2,50,000 INR"
+}
+```
+
+## Project Structure
 
 ```
-SamadhanAI/
+.
+├── .gitignore
+├── .next/                      # Next.js build output
 ├── app/                        # Next.js App Router
-│   ├── models/                 # Model Visualization Pages
+│   ├── api/                    # Backend API routes
+│   │   ├── gemini/
+│   │   │   ├── chat/
+│   │   │   │   └── route.ts
+│   │   │   └── rag/
+│   │   │       └── route.ts
+│   │   ├── models/             # Model-specific API routes
+│   │   │   ├── m1/
+│   │   │   │   └── route.ts
+│   │   │   ├── m2/
+│   │   │   │   └── route.ts
+│   │   │   ├── m3/
+│   │   │   │   └── route.ts
+│   │   │   └── m4/
+│   │   │       └── route.ts
+│   │   └── sarvam/
+│   │       ├── asr/
+│   │       │   └── route.ts
+│   │       └── ocr/
+│   │           └── route.ts
+│   ├── datasets/               # Dataset visualization pages
+│   │   └── page.tsx
+│   ├── demo/                   # Demo page
+│   │   └── page.tsx
+│   ├── models/                 # Model visualization pages
 │   │   ├── dispute-classifier/ # M1: Longformer
+│   │   │   └── page.tsx
 │   │   ├── document-completeness/ # M2: XGBoost
+│   │   │   └── page.tsx
 │   │   ├── payment-predictor/  # M3: LightGBM
+│   │   │   └── page.tsx
 │   │   └── rule-engine/        # M4: Deterministic
-│   ├── datasets/               # Dataset Explorers
-│   └── page.tsx                # Dashboard Home
-├── components/                 # React Components
-│   ├── ApiExplorer.tsx         # Interactive API Playground
-│   ├── ConfusionMatrix.tsx     # Metric Visualizations
-│   └── HighLevelDiagram.tsx    # Architecture Diagrams
-├── public/                     # Static Assets
-│   ├── images/                 # Architecture & Metric Charts
-├── next.config.ts              # Next.js Configuration
-├── package.json                # Frontend Dependencies
-└── README.md                   # Project Documentation
+│   │       └── page.tsx
+│   ├── globals.css             # Global CSS styles
+│   ├── icon.svg                # Application icon
+│   ├── layout.tsx              # Root layout component
+│   └── page.tsx                # Home page
+├── components/                 # Reusable React components
+│   ├── ApiExplorer.tsx         # Interactive API playground
+│   ├── ConfusionMatrix.tsx     # Metric visualizations
+│   ├── HighLevelDiagram.tsx    # High-level architecture diagram
+│   ├── LowLevelDiagram.tsx     # Low-level architecture diagram
+│   ├── ModelTester.tsx         # Component for testing models
+│   ├── Navigation.tsx          # Navigation bar component
+│   └── PipelineDiagram.tsx     # Pipeline flow diagram
+├── lib/                        # Utility functions and libraries
+│   └── model-simulate.ts       # Model simulation utilities
+├── next.config.ts              # Next.js configuration
+├── package-lock.json
+├── package.json                # Project dependencies and scripts
+├── postcss.config.mjs          # PostCSS configuration
+├── public/                     # Static assets
+│   ├── favicon.svg
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── make-in-india-new.png
+│   ├── make-in-india.png
+│   ├── make-in-india.svg
+│   ├── msme-logo-new.png
+│   ├── next.svg
+│   ├── odr-logo-new.webp
+│   ├── vercel.svg
+│   ├── window.svg
+│   └── images/                 # Image assets
+│       ├── arch-high.png
+│       ├── arch-high.svg
+│       ├── arch-low.png
+│       ├── arch-low.svg
+│       └── m2/
+│           ├── contract_cm.png
+│           ├── delivery_cm.png
+│           ├── gst_cm.png
+│           ├── invoice_cm.png
+│           └── po_cm.png
+├── README.md                   # Project documentation
+├── tsconfig.json               # TypeScript configuration
+└── vercel.json                 # Vercel deployment configuration
 ```
 
----
+## Configuration
 
-## 12. Installation & Running Locally
+Environment variables are managed using `.env.local` files. These variables are crucial for configuring API keys, external service endpoints, and other sensitive settings.
 
-### Prerequisites
-*   Node.js v18+
-*   Python 3.10+
-*   Docker (optional)
+*   **`NEXT_PUBLIC_GEMINI_API_KEY`**: API key for accessing Google Gemini services.
+*   **`NEXT_PUBLIC_SARVAM_API_KEY`**: API key for accessing Sarvam AI services.
 
-### Frontend (Website)
-```bash
-# Clone repository
-git clone https://github.com/your-org/samadhan-ai.git
-cd samadhan-ai/website
+Ensure these variables are properly set in your local development environment and securely managed in deployment environments.
 
-# Install dependencies
-npm install
+## Deployment
 
-# Run development server
-npm run dev
-```
-Access the dashboard at `http://localhost:3000`.
+The application is configured for deployment on Vercel, leveraging its native support for Next.js applications. Docker can also be used for containerized deployments in other environments.
 
-### Backend (Microservices)
-*Note: The demo connects to hosted endpoints. To run locally:*
+### Vercel Deployment
 
-```bash
-# Navigate to backend (if available in repo)
-cd backend
+Deployment to Vercel is streamlined through the `vercel.json` configuration, enabling serverless functions for API routes and efficient static asset serving.
 
-# Install requirements
-pip install -r requirements.txt
+### Docker Deployment
 
-# Run FastAPI server
-uvicorn main:app --reload --port 8000
-```
+For containerized environments, the provided `Dockerfile` builds a production-ready image of the Next.js application. Refer to the Installation section for Docker build and run commands.
 
-### Docker Build
-```bash
-# Build frontend
-docker build -t samadhan-frontend ./website
+## Contributing
 
-# Build backend
-docker build -t samadhan-backend ./backend
+Contributions are welcome. Please ensure that code adheres to the existing style and architectural patterns.
 
-# Run composition
-docker-compose up -d
-```
+## License
 
----
-
-## 13. Scalability & Roadmap
-
-*   **Horizontal Scaling:** The stateless microservices architecture allows independent scaling of the computationally heavy Longformer model (GPU nodes) vs. the lightweight Rule Engine (CPU nodes).
-*   **Future Integrations:**
-    *   **SarvamAI ASR:** Voice-based case filing for rural MSMEs.
-    *   **Auto-Drafting:** Generative AI to draft legal notices based on Rule Engine outputs.
-    *   **ODR Platform Integration:** Direct API hooks into the government's Samadhaan portal.
-
----
-
-## 14. Competition Alignment Summary
-
-| Parameter | Alignment |
-| :--- | :--- |
-| **Innovation** | Hybrid Neuro-Symbolic architecture (Deep Learning + Deterministic Law). |
-| **Technical Feasibility** | Proven SOTA models (Longformer, LightGBM) with <100ms latency. |
-| **Scalability** | Microservices ready for NIC Cloud (MeghRaj) / K8s. |
-| **Responsible AI** | Full explainability (SHAP) + Bias Calibration + Privacy preservation. |
-| **User Impact** | Reduces case rejection (currently 38%) and accelerates justice for MSMEs. |
+(License information will be inserted here if available or explicitly provided.)
