@@ -11,21 +11,21 @@ The system is implemented as a full-stack Next.js application, integrating both 
 1.  **Web Application (Next.js):** Provides a comprehensive user interface for claimants and adjudicators, built with React and TypeScript.
 2.  **API Services (Next.js API Routes):** Handles all backend logic, including interactions with various AI models (Gemini, Sarvam, and custom models M1-M4), data processing, and statutory calculations. These routes serve as the central point for all data and intelligence operations.
 3.  **Intelligence Center:** Comprising various AI models and deterministic engines for:
-    *   **Case Intake & Document Processing:** Including Optical Character Recognition (OCR) and completeness checks.
-    *   **Prediction Engine:** Machine learning-based forecasting of dispute outcomes.
-    *   **Legal Rule Engine:** Enforcement of statutory calculations as per the MSMED Act.
+    - **Case Intake & Document Processing:** Including Optical Character Recognition (OCR) and completeness checks.
+    - **Prediction Engine:** Machine learning-based forecasting of dispute outcomes.
+    - **Legal Rule Engine:** Enforcement of statutory calculations as per the MSMED Act.
 4.  **Data Layer:** Utilizes external databases and object storage for case data, documents, and model registries.
 
 ## Features
 
-*   **Legal Dispute Classification (M1):** Classifies dispute narratives into statutory categories.
-*   **Document Completeness Engine (M2):** Detects presence and absence of mandatory documents.
-*   **Payment Outcome Prediction (M3):** Predicts the probability of a "Win" or "Loss" for the claimant.
-*   **Legal Rule Engine (M4):** Precisely calculates statutory interest based on the MSMED Act.
-*   **Gemini AI Integration:** Chat and Retrieval-Augmented Generation (RAG) capabilities for enhanced interaction.
-*   **Sarvam AI Integration:** Asr and OCR services for document processing and voice input.
-*   **Interactive UI:** Dedicated pages for model visualization, dataset exploration, and an interactive demo.
-*   **API Explorer:** A component for testing and understanding API interactions.
+- **Legal Dispute Classification (M1):** Classifies dispute narratives into statutory categories.
+- **Document Completeness Engine (M2):** Detects presence and absence of mandatory documents.
+- **Payment Outcome Prediction (M3):** Predicts the probability of a "Win" or "Loss" for the claimant.
+- **Legal Rule Engine (M4):** Precisely calculates statutory interest based on the MSMED Act.
+- **Gemini AI Integration:** Chat and Retrieval-Augmented Generation (RAG) capabilities for enhanced interaction.
+- **Sarvam AI Integration:** Asr and OCR services for document processing and voice input.
+- **Interactive UI:** Dedicated pages for model visualization, dataset exploration, and an interactive demo.
+- **API Explorer:** A component for testing and understanding API interactions.
 
 ## Core Components
 
@@ -34,117 +34,117 @@ The system is implemented as a full-stack Next.js application, integrating both 
 **Model:** Fine-tuned Longformer (AllenAI)
 **Purpose:** Classifies unstructured dispute narratives into 6 statutory categories under the MSMED Act. The Longformer model is used due to its ability to handle long input sequences (up to 4,096 tokens), preventing truncation of crucial context in detailed dispute narratives.
 
-*   **Classes:** `payment_delay`, `contract_breach`, `quality_dispute`, `delivery_failure`, `documentation_dispute`, `statutory_violation`.
-*   **Performance:**
-    *   **AUC-ROC:** 0.948
-    *   **Macro F1:** 0.898
-    *   **Accuracy:** 91.2%
-    *   **Latency:** ~38ms
+- **Classes:** `payment_delay`, `contract_breach`, `quality_dispute`, `delivery_failure`, `documentation_dispute`, `statutory_violation`.
+- **Performance:**
+  - **AUC-ROC:** 0.948
+  - **Macro F1:** 0.898
+  - **Accuracy:** 91.2%
+  - **Latency:** ~38ms
 
 ### 4.2 Document Completeness Engine (M2)
 
 **Model:** Ensemble of 5 Independent XGBoost Classifiers
 **Purpose:** Detects the presence or absence of mandatory documents such as Invoice, Purchase Order, Challan, GST Certificate, and Contract. This is achieved through independent binary classifiers for each document type to ensure high precision.
 
-*   **Explainability:** Utilizes SHAP (SHapley Additive exPlanations) TreeExplainer to assign contribution scores to text features, aiding in understanding document presence detection.
-*   **Performance:**
-    *   **F1 Score:** 0.99 (Aggregate)
-    *   **False Negative Rate:** <1%
+- **Explainability:** Utilizes SHAP (SHapley Additive exPlanations) TreeExplainer to assign contribution scores to text features, aiding in understanding document presence detection.
+- **Performance:**
+  - **F1 Score:** 0.99 (Aggregate)
+  - **False Negative Rate:** <1%
 
 ### 4.3 Payment Outcome Predictor (M3)
 
 **Model:** LightGBM with Platt Scaling (Isotonic Calibration)
 **Purpose:** Predicts the probability of a "Win" versus "Loss" for the claimant. Platt Scaling is employed to calibrate model outputs, ensuring that predicted probabilities accurately reflect empirical win rates, which is essential for legal defensibility.
 
-*   **Features:** `invoice_amount`, `days_overdue`, `document_completeness_score`, `buyer_category`, `prior_disputes_count`.
-*   **Performance:**
-    *   **AUC-ROC:** 0.891
-    *   **Brier Score:** 0.112
-    *   **ECE (Expected Calibration Error):** 0.021
+- **Features:** `invoice_amount`, `days_overdue`, `document_completeness_score`, `buyer_category`, `prior_disputes_count`.
+- **Performance:**
+  - **AUC-ROC:** 0.891
+  - **Brier Score:** 0.112
+  - **ECE (Expected Calibration Error):** 0.021
 
 ### 4.4 Legal Rule Engine (M4)
 
 **Model:** Deterministic Python Engine
 **Purpose:** Enforces the specific sections of the MSMED Act (Sections 15–22) for accurate interest calculation. This component is deterministic to ensure legal exactitude, as machine learning approximations are not suitable for statutory financial liability.
 
-*   **Logic:**
-    *   **Section 15:** Verifies the 45-day payment deadline.
-    *   **Section 16:** Calculates compound interest at 3 times the RBI Bank Rate.
-    *   **Section 17:** Aggregates principal and interest amounts.
-*   **Output:** Provides exact floating-point currency values along with a comprehensive reasoning trace.
+- **Logic:**
+  - **Section 15:** Verifies the 45-day payment deadline.
+  - **Section 16:** Calculates compound interest at 3 times the RBI Bank Rate.
+  - **Section 17:** Aggregates principal and interest amounts.
+- **Output:** Provides exact floating-point currency values along with a comprehensive reasoning trace.
 
 ## Data Engineering Strategy
 
-*   **Sources:** Case filings from Indian Kanoon and archived orders from MSME Facilitation Councils.
-*   **Curation & Labeling:** Raw text is cleaned using regex pipelines. LLM-assisted labeling (Gemini 1.5 Pro) generates initial weak labels for the dispute classifier, followed by human expert review.
-*   **Splitting:** Data is stratified into 80/10/10 splits to maintain class distribution during training, validation, and testing.
-*   **Privacy:** A PII redaction pipeline removes sensitive information (names, GSTNs, phone numbers) before model training.
+- **Sources:** Case filings from Indian Kanoon and archived orders from MSME Facilitation Councils.
+- **Curation & Labeling:** Raw text is cleaned using regex pipelines. LLM-assisted labeling (Gemini 1.5 Pro) generates initial weak labels for the dispute classifier, followed by human expert review.
+- **Splitting:** Data is stratified into 80/10/10 splits to maintain class distribution during training, validation, and testing.
+- **Privacy:** A PII redaction pipeline removes sensitive information (names, GSTNs, phone numbers) before model training.
 
 ## Evaluation Framework
 
 Model evaluation is rigorously conducted using metrics aligned with ODR requirements:
 
-| Component               | Primary Metric               | Secondary Metric | Business Impact                                                     |
-| :---------------------- | :--------------------------- | :--------------- | :------------------------------------------------------------------ |
-| **Dispute Classifier**    | **Macro F1**                   | AUC-ROC          | Ensures minority classes (e.g., *Statutory Violation*) are not ignored. |
-| **Doc Completeness**      | **Recall (at fixed precision)** | F1 Score         | Minimizes False Negatives to prevent wrongful case rejection.        |
-| **Payment Predictor**     | **ECE (Calibration Error)**    | Brier Score      | Ensures risk probabilities are realistic for negotiation.           |
-| **Rule Engine**           | **Exact Match (100%)**         | N/A              | Zero tolerance for error in financial liability.                    |
+| Component              | Primary Metric                  | Secondary Metric | Business Impact                                                         |
+| :--------------------- | :------------------------------ | :--------------- | :---------------------------------------------------------------------- |
+| **Dispute Classifier** | **Macro F1**                    | AUC-ROC          | Ensures minority classes (e.g., _Statutory Violation_) are not ignored. |
+| **Doc Completeness**   | **Recall (at fixed precision)** | F1 Score         | Minimizes False Negatives to prevent wrongful case rejection.           |
+| **Payment Predictor**  | **ECE (Calibration Error)**     | Brier Score      | Ensures risk probabilities are realistic for negotiation.               |
+| **Rule Engine**        | **Exact Match (100%)**          | N/A              | Zero tolerance for error in financial liability.                        |
 
 ## Technical Robustness
 
-*   **Reproducibility:** All random seeds are fixed for consistent results. The Rule Engine is version-controlled and includes RBI rate history.
-*   **Monitoring:** Drifts in `invoice_amount` or `dispute_type` distributions trigger automated retraining alerts.
-*   **Latency:** All inference endpoints are optimized for sub-100ms response times.
-    *   Payment Predictor: ~12ms
-    *   Rule Engine: ~4ms
+- **Reproducibility:** All random seeds are fixed for consistent results. The Rule Engine is version-controlled and includes RBI rate history.
+- **Monitoring:** Drifts in `invoice_amount` or `dispute_type` distributions trigger automated retraining alerts.
+- **Latency:** All inference endpoints are optimized for sub-100ms response times.
+  - Payment Predictor: ~12ms
+  - Rule Engine: ~4ms
 
 ## Responsible AI & Compliance
 
-*   **Explainability:**
-    *   **M2 (Document Completeness):** SHAP plots illustrate features contributing to document detection.
-    *   **M3 (Payment Predictor):** SHAP force plots explain factors influencing win probability.
-*   **Transparency:** The Rule Engine provides a text-based Reasoning Trace, citing specific sections of the MSMED Act.
-*   **Data Governance:** The architecture supports data residency within India (NIC/MeghRaj) and complies with the DPDP Act.
-*   **Bias Mitigation:** Calibration techniques ensure fair predictions across different enterprise categories.
+- **Explainability:**
+  - **M2 (Document Completeness):** SHAP plots illustrate features contributing to document detection.
+  - **M3 (Payment Predictor):** SHAP force plots explain factors influencing win probability.
+- **Transparency:** The Rule Engine provides a text-based Reasoning Trace, citing specific sections of the MSMED Act.
+- **Data Governance:** The architecture supports data residency within India (NIC/MeghRaj) and complies with the DPDP Act.
+- **Bias Mitigation:** Calibration techniques ensure fair predictions across different enterprise categories.
 
 ## Tech Stack
 
 ### Model Development
 
-*   **Longformer:** For Legal Dispute Classification (M1).
-*   **XGBoost:** For Document Completeness Engine (M2).
-*   **LightGBM:** For Payment Outcome Predictor (M3).
-*   **Deterministic Python:** For Legal Rule Engine (M4).
-*   **Inference:** ONNX Runtime / PyTorch.
+- **Longformer:** For Legal Dispute Classification (M1).
+- **XGBoost:** For Document Completeness Engine (M2).
+- **LightGBM:** For Payment Outcome Predictor (M3).
+- **Deterministic Python:** For Legal Rule Engine (M4).
+- **Inference:** ONNX Runtime / PyTorch.
 
 ### Backend / API
 
-*   **Next.js API Routes:** Framework for building serverless API endpoints.
-*   **TypeScript:** Primary language for development.
-*   **Node.js:** Runtime environment.
+- **Next.js API Routes:** Framework for building serverless API endpoints.
+- **TypeScript:** Primary language for development.
+- **Node.js:** Runtime environment.
 
 ### Deployment
 
-*   **Vercel:** Preferred platform for Next.js application deployment.
-*   **Docker:** Containerization for consistent environments.
+- **Vercel:** Preferred platform for Next.js application deployment.
+- **Docker:** Containerization for consistent environments.
 
 ### MLOps / LLMOps
 
-*   **MLflow:** For model registry and experiment tracking (as implied by monitoring).
-*   **Automated Monitoring:** For data and model drift detection.
+- **MLflow:** For model registry and experiment tracking (as implied by monitoring).
+- **Automated Monitoring:** For data and model drift detection.
 
 ### Agentic Framework
 
-*   **Google Gemini AI:** Utilized for chat and Retrieval-Augmented Generation (RAG) capabilities.
+- **Google Gemini AI:** Utilized for chat and Retrieval-Augmented Generation (RAG) capabilities.
 
 ## Installation
 
 ### Prerequisites
 
-*   Node.js v18+
-*   npm (usually comes with Node.js)
-*   Git
+- Node.js v18+
+- npm (usually comes with Node.js)
+- Git
 
 ### Local Setup
 
@@ -440,8 +440,8 @@ The following API endpoints are available within the Next.js application:
 
 Environment variables are managed using `.env.local` files. These variables are crucial for configuring API keys, external service endpoints, and other sensitive settings.
 
-*   **`NEXT_PUBLIC_GEMINI_API_KEY`**: API key for accessing Google Gemini services.
-*   **`NEXT_PUBLIC_SARVAM_API_KEY`**: API key for accessing Sarvam AI services.
+- **`NEXT_PUBLIC_GEMINI_API_KEY`**: API key for accessing Google Gemini services.
+- **`NEXT_PUBLIC_SARVAM_API_KEY`**: API key for accessing Sarvam AI services.
 
 Ensure these variables are properly set in your local development environment and securely managed in deployment environments.
 
@@ -456,11 +456,3 @@ Deployment to Vercel is streamlined through the `vercel.json` configuration, ena
 ### Docker Deployment
 
 For containerized environments, the provided `Dockerfile` builds a production-ready image of the Next.js application. Refer to the Installation section for Docker build and run commands.
-
-## Contributing
-
-Contributions are welcome. Please ensure that code adheres to the existing style and architectural patterns.
-
-## License
-
-(License information will be inserted here if available or explicitly provided.)
