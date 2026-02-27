@@ -10,9 +10,10 @@ const MODEL_API = {
   m2: "/api/models/m2",
   m3: "/api/models/m3",
   m4: "/api/models/m4",
+  m5: "/api/models/m5-negotiation",
 };
 
-type StepId = "input" | "asr" | "ocr" | "m1" | "m2" | "m3" | "m4" | "rag";
+type StepId = "input" | "asr" | "ocr" | "m1" | "m2" | "m3" | "m4" | "m5" | "rag";
 
 interface StepState {
   id: StepId;
@@ -32,6 +33,7 @@ const STEPS: { id: StepId; label: string }[] = [
   { id: "m2", label: "M2 Doc Completeness" },
   { id: "m3", label: "M3 Payment Predictor" },
   { id: "m4", label: "M4 Rule Engine" },
+  { id: "m5", label: "M5 Negotiation Engine" },
   { id: "rag", label: "RAG Analysis" },
 ];
 
@@ -54,6 +56,7 @@ export default function DemoPage() {
     m2Result: unknown;
     m3Result: unknown;
     m4Result: unknown;
+    m5Result: unknown;
   } | null>(null);
   const [structuredInputs, setStructuredInputs] = useState({
     invoice_amount: "250000",
@@ -271,8 +274,48 @@ export default function DemoPage() {
       updateStep("m4", { status: "error", error: String(e), output: undefined });
     }
 
-    // RAG (Gemini)
-    const ragInput = { caseNarrative: caseText, m1Result, m2Result, m3Result, m4Result };
+    // M5 Negotiation Engine — uses M3 win_probability, M4 statutory_interest, structured inputs
+    const buyerCat = String(structuredInputs.buyer_category || "medium");
+    const m5BuyerCategory =
+      buyerCat === "micro" ? "Micro" :
+      buyerCat === "small" ? "Small" :
+      buyerCat === "medium" ? "Medium" :
+      buyerCat === "large_enterprise" ? "Large" :
+      buyerCat === "government" ? "Govt" : "Medium";
+    const m4Obj = m4Result as { statutory_interest_rs?: number; statutory_interest?: { estimated_amount_rs?: number } } | null;
+    const statutoryInterest =
+      (m4Obj?.statutory_interest_rs ?? m4Obj?.statutory_interest?.estimated_amount_rs) ?? 0;
+    const m3Obj = m3Result as { win_probability?: number } | null;
+    const winProbability = m3Obj?.win_probability ?? 0.74;
+    const m5Input = {
+      invoice_amount: Number(structuredInputs.invoice_amount),
+      days_overdue: Number(structuredInputs.days_overdue),
+      win_probability: winProbability,
+      statutory_interest: statutoryInterest,
+      document_completeness_score: Number(structuredInputs.document_completeness_score),
+      buyer_category: m5BuyerCategory,
+      prior_disputes_count: Number(structuredInputs.prior_disputes_count),
+      current_offer: null,
+      role: "claimant",
+    };
+    updateStep("m5", { status: "running", input: m5Input });
+    let m5Result: unknown = null;
+    try {
+      const r = await fetch(MODEL_API.m5, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(m5Input),
+      });
+      const m5Data = await r.json();
+      m5Result = m5Data;
+      if (!r.ok) throw new Error(m5Data.error || "M5 failed");
+      updateStep("m5", { status: "done", result: m5Result, output: m5Result });
+    } catch (e) {
+      updateStep("m5", { status: "error", error: String(e), output: undefined });
+    }
+
+    // RAG (Gemini) — includes M5 negotiation result
+    const ragInput = { caseNarrative: caseText, m1Result, m2Result, m3Result, m4Result, m5Result };
     updateStep("rag", { status: "running", input: ragInput });
     try {
       const r = await fetch("/api/gemini/rag", {
@@ -284,6 +327,7 @@ export default function DemoPage() {
           m2Result,
           m3Result,
           m4Result,
+          m5Result,
         }),
       });
       const data = await r.json();
@@ -295,6 +339,7 @@ export default function DemoPage() {
         m2Result,
         m3Result,
         m4Result,
+        m5Result,
       });
       updateStep("rag", { status: "done", result: { analysis: data.analysis }, output: { analysis: data.analysis } });
     } catch (e) {
@@ -389,7 +434,7 @@ export default function DemoPage() {
                     fontFamily: "JetBrains Mono, monospace",
                   }}
                 >
-                  SarvamAI + M1–M4 + RAG
+                  SarvamAI + M1–M5 + RAG
                 </span>
               </div>
               <h1
@@ -414,8 +459,8 @@ export default function DemoPage() {
                 }}
               >
                 Upload a document, record voice, or type your dispute narrative.
-                The pipeline runs ASR/OCR → M1–M4 → RAG to produce an
-                actionable analysis.
+                The pipeline runs ASR/OCR → M1–M5 → RAG to produce an
+                actionable analysis including negotiation strategy and draft.
               </p>
             </div>
           </div>
@@ -1042,6 +1087,77 @@ export default function DemoPage() {
             })}
           </div>
         </section>
+
+        {/* M5 Negotiation summary (when pipeline ran successfully) */}
+        {steps.find((s) => s.id === "m5" && s.status === "done" && s.result) && (() => {
+          const m5 = steps.find((s) => s.id === "m5")?.result as {
+            total_liability?: number;
+            recommended_settlement_range?: { lower_bound?: number; upper_bound?: number };
+            strategy?: { label?: string; posture?: string };
+            draft_message?: string;
+          } | undefined;
+          if (!m5) return null;
+          const range = m5.recommended_settlement_range;
+          return (
+            <section
+              style={{
+                marginBottom: 32,
+                border: "1.5px solid #FDE68A",
+                borderRadius: 10,
+                overflow: "hidden",
+                backgroundColor: "#FFFBEB",
+              }}
+            >
+              <div
+                style={{
+                  padding: "14px 18px",
+                  borderBottom: "1px solid #FDE68A",
+                  backgroundColor: "#FEF3C7",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "#92400E",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: 8,
+                }}
+              >
+                <span>M5 Negotiation Engine</span>
+                <Link href="/models/negotiation-engine" className="btn btn-amber btn-sm" style={{ textDecoration: "none" }}>
+                  Open Negotiation Engine →
+                </Link>
+              </div>
+              <div style={{ padding: 18 }}>
+                {m5.total_liability != null && range && (
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#A8A29E", letterSpacing: "0.06em", marginBottom: 4 }}>Settlement band</div>
+                    <div style={{ fontSize: 13, color: "#44403C" }}>
+                      Total liability: ₹{m5.total_liability.toLocaleString("en-IN")}
+                      {range.lower_bound != null && range.upper_bound != null && (
+                        <> · Recommend: ₹{range.lower_bound.toLocaleString("en-IN")} – ₹{range.upper_bound.toLocaleString("en-IN")}</>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {m5.strategy?.label && (
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#A8A29E", letterSpacing: "0.06em", marginBottom: 4 }}>Strategy</div>
+                    <div style={{ fontSize: 13, color: "#44403C" }}>{m5.strategy.label} — {m5.strategy.posture}</div>
+                  </div>
+                )}
+                {m5.draft_message && (
+                  <details style={{ marginTop: 8 }}>
+                    <summary style={{ fontSize: 12, fontWeight: 600, color: "#92400E", cursor: "pointer" }}>View draft message</summary>
+                    <pre style={{ margin: "8px 0 0", whiteSpace: "pre-wrap", fontSize: 12, lineHeight: 1.6, color: "#57534E", fontFamily: "var(--font-geist-mono)" }}>
+                      {m5.draft_message}
+                    </pre>
+                  </details>
+                )}
+              </div>
+            </section>
+          );
+        })()}
 
         {/* RAG Analysis output */}
         {analysis && (

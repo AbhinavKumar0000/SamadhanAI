@@ -164,8 +164,9 @@ export default function DisputeClassifierPage() {
         </section>
 
         {/* Nav */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 20, borderTop: "1px solid #E7E5E4" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, paddingTop: 20, borderTop: "1px solid #E7E5E4" }}>
           <Link href="/#models" className="btn btn-outline btn-sm">← All Models</Link>
+          <Link href="/demo" className="btn btn-outline btn-sm">Full Pipeline Demo</Link>
           <Link href="/models/document-completeness" className="btn btn-outline btn-sm">Document Completeness →</Link>
         </div>
       </div>

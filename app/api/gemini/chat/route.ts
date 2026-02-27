@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
       m2Result,
       m3Result,
       m4Result,
+      m5Result,
       messages,
       question,
     } = body as {
@@ -25,6 +26,7 @@ export async function POST(req: NextRequest) {
       m2Result?: unknown;
       m3Result?: unknown;
       m4Result?: unknown;
+      m5Result?: unknown;
       messages?: Array<{ role: "user" | "assistant"; content: string }>;
       question?: string;
     };
@@ -40,9 +42,11 @@ ${caseNarrative || "Not provided"}
 
 **M3 – Payment outcome:** ${JSON.stringify(m3Result || {}, null, 2)}
 
-**M4 – Legal rule engine:** ${JSON.stringify(m4Result || {}, null, 2)}`;
+**M4 – Legal rule engine:** ${JSON.stringify(m4Result || {}, null, 2)}
 
-    const systemPrompt = `You are a legal analyst assistant for MSME disputes under the MSMED Act, 2006. You have access to the document analysis context above (case narrative + M1–M4 pipeline outputs). Answer the user's questions based on this context. Be concise, professional, and cite specific findings from the pipeline when relevant. If the question cannot be answered from the context, say so.`;
+**M5 – Negotiation engine:** ${JSON.stringify(m5Result || {}, null, 2)}`;
+
+    const systemPrompt = `You are a legal analyst assistant for MSME disputes under the MSMED Act, 2006. You have access to the document analysis context above (case narrative + M1–M5 pipeline outputs). Answer the user's questions based on this context. Be concise, professional, and cite specific findings from the pipeline when relevant. If the question cannot be answered from the context, say so.`;
 
     const msgs = messages && messages.length > 0 ? messages : [];
     const lastUser = msgs.filter((m) => m.role === "user").pop();

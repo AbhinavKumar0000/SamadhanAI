@@ -99,9 +99,10 @@ interest_amount  = principal × daily_rate × days_overdue
 # Total Payable = ₹2,50,000 + ₹8,945 = ₹2,58,945`}</pre>
         </section>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 20, borderTop: "1px solid #E7E5E4" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, paddingTop: 20, borderTop: "1px solid #E7E5E4" }}>
           <Link href="/models/payment-predictor" className="btn btn-outline btn-sm">← Payment Predictor</Link>
-          <Link href="/datasets" className="btn btn-outline btn-sm">View Datasets →</Link>
+          <Link href="/demo" className="btn btn-outline btn-sm">Full Pipeline Demo</Link>
+          <Link href="/models/negotiation-engine" className="btn btn-outline btn-sm">Negotiation Engine →</Link>
         </div>
       </div>
     </div>

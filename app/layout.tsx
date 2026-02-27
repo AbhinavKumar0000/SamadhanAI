@@ -39,7 +39,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <div>
                 <div style={{ fontSize: 10, color: "#A8A29E", textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "var(--font-geist-mono)", marginBottom: 12 }}>Models</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {[["Dispute Classifier", "/models/dispute-classifier"], ["Document Completeness", "/models/document-completeness"], ["Payment Predictor", "/models/payment-predictor"], ["Rule Engine", "/models/rule-engine"]].map(([l, h]) => (
+                  {[
+                    ["Dispute Classifier", "/models/dispute-classifier"],
+                    ["Document Completeness", "/models/document-completeness"],
+                    ["Payment Predictor", "/models/payment-predictor"],
+                    ["Rule Engine", "/models/rule-engine"],
+                    ["Negotiation Engine", "/models/negotiation-engine"],
+                  ].map(([l, h]) => (
                     <Link key={l} href={h} style={{ fontSize: 13, color: "#78716C", textDecoration: "none" }}>{l}</Link>
                   ))}
                 </div>

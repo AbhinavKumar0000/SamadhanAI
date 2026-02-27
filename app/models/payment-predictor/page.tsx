@@ -113,8 +113,9 @@ export default function PaymentPredictorPage() {
           </div>
         </section>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 20, borderTop: "1px solid #E7E5E4" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, paddingTop: 20, borderTop: "1px solid #E7E5E4" }}>
           <Link href="/models/document-completeness" className="btn btn-outline btn-sm">← Document Completeness</Link>
+          <Link href="/demo" className="btn btn-outline btn-sm">Full Pipeline Demo</Link>
           <Link href="/models/rule-engine" className="btn btn-outline btn-sm">Rule Engine →</Link>
         </div>
       </div>

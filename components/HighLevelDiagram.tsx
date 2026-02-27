@@ -51,6 +51,7 @@ const aiModels: {
     { label: "Sentiment Model", sub: "Fine-tuned small transformer", type: "external" },
     { label: "LLM Drafting", sub: "RAG-based generation engine", type: "external" },
     { label: "Legal Rule Engine", sub: "Deterministic · MSMED Act rules", type: "inhouse", tag: "M4", route: "/models/rule-engine" },
+    { label: "Negotiation Engine", sub: "Settlement bands · Strategy · Gemini drafting", type: "inhouse", tag: "M5", route: "/models/negotiation-engine" },
   ];
 
 const dataLayer = [

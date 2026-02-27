@@ -136,8 +136,9 @@ export default function DocumentCompletenessPage() {
           </div>
         </section>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 20, borderTop: "1px solid #E7E5E4" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, paddingTop: 20, borderTop: "1px solid #E7E5E4" }}>
           <Link href="/models/dispute-classifier" className="btn btn-outline btn-sm">← Dispute Classifier</Link>
+          <Link href="/demo" className="btn btn-outline btn-sm">Full Pipeline Demo</Link>
           <Link href="/models/payment-predictor" className="btn btn-outline btn-sm">Payment Predictor →</Link>
         </div>
       </div>

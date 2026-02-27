@@ -14,7 +14,7 @@ The platform is built on a multi-layered architecture that ensures a clear separ
 The user-facing interface, built with Next.js and React, provides a comprehensive portal for claimants and adjudicators. It facilitates case submission, document upload, and visualization of case analytics and model outputs.
 
 ### Intelligence Layer
-This is the core of the platform, hosting a suite of machine learning models and deterministic engines. It performs all computational tasks, including dispute classification, document analysis, risk prediction, and statutory calculations.
+This is the core of the platform, hosting a suite of machine learning models and deterministic engines. It performs all computational tasks, including dispute classification, document analysis, risk prediction, statutory calculations, and negotiation strategy and drafting.
 
 ### Statutory Engine Layer
 A deterministic rule-based engine that precisely implements the financial liability clauses of the MSMED Act, 2006. It calculates statutory interest and penalties with full transparency and legal exactitude, providing a clear reasoning trace for all calculations.
@@ -29,7 +29,7 @@ The platform leverages external, state-of-the-art AI services for specialized ta
 
 ## Core Intelligence Modules
 
-SamadhanAI integrates four primary intelligence modules (M1-M4) that work in concert to process and analyze disputes.
+SamadhanAI integrates five primary intelligence modules (M1-M5) that work in concert to process and analyze disputes.
 
 ### M1: Legal Dispute Classifier
 - **Purpose:** Automatically categorizes unstructured dispute narratives into predefined legal classes under the MSMED Act.
@@ -55,6 +55,12 @@ SamadhanAI integrates four primary intelligence modules (M1-M4) that work in con
 - **Business Function:** Guarantees regulatory compliance by programmatically enforcing financial penalties. It generates an exact, auditable calculation of liabilities, removing ambiguity and the risk of human error.
 - **Key Performance Indicators:** 100% exact match on all statutory calculations.
 
+### M5: Negotiation Engine
+- **Purpose:** Computes deterministic settlement bands, recommends negotiation strategy, and produces formal negotiation messages for claimants or buyers.
+- **Model Type:** Hybrid engine combining rule-based settlement bands and strategy logic with a controlled Gemini drafting layer for message generation.
+- **Business Function:** Informs settlement discussions by providing a defensible settlement range, posture (e.g., hold firm, accommodate), and escalation risk. The drafting layer produces legally appropriate, formal text for use in correspondence.
+- **Key Performance Indicators:** Stateful negotiation state; settlement bands derived from M3 win probability and M4 statutory outputs.
+
 ## End-to-End Workflow
 
 A dispute proceeds through a standardized, automated workflow designed for efficiency and legal compliance.
@@ -64,13 +70,14 @@ A dispute proceeds through a standardized, automated workflow designed for effic
 3.  **Classification:** The **Dispute Classifier (M1)** analyzes the narrative to assign a statutory classification. The **Document Completeness Engine (M2)** verifies that all required documents are present.
 4.  **Risk Prediction:** The **Payment Predictor (M3)** analyzes case features to generate a calibrated probability of the claimant winning the dispute.
 5.  **Statutory Calculation:** If a payment delay is established, the **Legal Rule Engine (M4)** computes the exact compound interest due as mandated by the MSMED Act.
-6.  **Output:** The system generates a comprehensive case file, including the dispute classification, completeness check, risk assessment, and a detailed breakdown of the total amount payable, complete with a reasoning trace for the statutory calculations.
+6.  **Negotiation:** The **Negotiation Engine (M5)** consumes M3 and M4 outputs to compute settlement bands, recommend strategy, and draft formal negotiation messages. The full pipeline demo runs M1 through M5 and passes all results to the RAG analysis.
+7.  **Output:** The system generates a comprehensive case file, including the dispute classification, completeness check, risk assessment, statutory breakdown with reasoning trace, settlement band and strategy (M5), and an integrated RAG analysis.
 
 ## Responsible AI & Compliance
 
 The platform is designed with operational safety, fairness, and transparency as core tenets.
 
-- **Explainability:** Model decisions are accompanied by explanations where appropriate. The Document Completeness (M2) and Payment Predictor (M3) models use SHAP plots to provide feature attributions, while the Rule Engine (M4) produces a step-by-step reasoning trace that cites specific sections of the law.
+- **Explainability:** Model decisions are accompanied by explanations where appropriate. The Document Completeness (M2) and Payment Predictor (M3) models use SHAP plots to provide feature attributions, while the Rule Engine (M4) produces a step-by-step reasoning trace that cites specific sections of the law. The Negotiation Engine (M5) exposes deterministic settlement bands and strategy rationale.
 - **Transparency:** All automated calculations performed by the Statutory Engine are fully auditable and traceable to the legal source code.
 - **Data Governance:** The architecture is designed to comply with the Digital Personal Data Protection (DPDP) Act and supports data residency requirements, including deployment on national cloud infrastructure (e.g., NIC/MeghRaj).
 - **Fairness:** Bias mitigation techniques, such as probability calibration, are employed to ensure that predictions are fair and equitable across different categories of enterprises.
@@ -108,6 +115,11 @@ The platform exposes a set of RESTful API endpoints for integration with externa
 **POST** `/api/models/m4`
 - **Payload:** `{ "invoice_amount": 250000, "days_overdue": 67, ... }`
 - **Response:** `{ "statutory_interest_rs": 8945.32, "reasoning_trace": [...] }`
+
+#### M5: Negotiation Engine
+**POST** `/api/models/m5-negotiation`
+- **Payload:** `{ "invoice_amount": 250000, "days_overdue": 67, "win_probability": 0.74, "statutory_interest": 8945, "document_completeness_score": 0.8, "buyer_category": "Medium", "prior_disputes_count": 0, "current_offer": null, "role": "claimant" }`
+- **Response:** `{ "total_liability": 258945, "recommended_settlement_range": { "lower_bound": 200000, "upper_bound": 258945 }, "strategy": { "label": "...", "posture": "...", "escalation_risk": false }, "negotiation_state": { "status": "ongoing", "offer_history": [] }, "draft_message": "..." }`
 
 #### Sarvam ASR & OCR
 - **POST** `/api/sarvam/asr`

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { caseNarrative, m1Result, m2Result, m3Result, m4Result } = body;
+    const { caseNarrative, m1Result, m2Result, m3Result, m4Result, m5Result } = body;
 
     const prompt = `You are a legal analyst for MSME disputes under the MSMED Act, 2006. Synthesize all pipeline model outputs below into one integrated, actionable analysis of the case document.
 
@@ -30,12 +30,16 @@ ${JSON.stringify(m3Result || {}, null, 2)}
 M4 – LEGAL RULE ENGINE:
 ${JSON.stringify(m4Result || {}, null, 2)}
 
-Write a clear, professional analysis that integrates findings from all four models. Include:
+M5 – NEGOTIATION ENGINE:
+${JSON.stringify(m5Result || {}, null, 2)}
+
+Write a clear, professional analysis that integrates findings from all five models. Include:
 1. Dispute type and confidence (from M1)
 2. Document gaps and completeness (from M2)
 3. Win probability and key factors (from M3)
 4. Statutory interest and total payable (from M4)
-5. Recommended next steps
+5. Settlement band, strategy recommendation, and negotiation stance (from M5)
+6. Recommended next steps
 
 Use plain text with line breaks. Avoid markdown formatting like ** or #. Use simple headings like "Summary:", "Document Status:", etc. Provide a complete analysis for all sections.`;
 

@@ -197,11 +197,11 @@ export function LowLevelDiagram() {
           </div>
 
           <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-            <SectionLabel text="Negotiation Engine" color="#4338CA" bg="#EEF2FF" border="#C7D2FE" />
+            <SectionLabel text="Negotiation Engine" color="#92400E" bg="#FFFBEB" border="#FDE68A" />
             <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
-              <NeutralBox label="Sentiment and Tone Model" sub="Detect negotiation stance" fullWidth tint="#EEF2FF" border="#C7D2FE" textColor="#3730A3" />
-              <NeutralBox label="Strategy Generator" sub="Settlement amount suggestion" fullWidth tint="#EEF2FF" border="#C7D2FE" textColor="#3730A3" />
-              <NeutralBox label="Negotiation Playbook" sub="Timeline and bond recommendations" fullWidth tint="#EEF2FF" border="#C7D2FE" textColor="#3730A3" />
+              <ModelBox tag="M5" label="Negotiation Engine" sub="Settlement bands · Strategy · Gemini drafting" router={router} route="/models/negotiation-engine" fullWidth />
+              <NeutralBox label="Sentiment and Tone" sub="Detect negotiation stance" fullWidth tint="#FFFBEB" border="#FDE68A" textColor="#92400E" />
+              <NeutralBox label="Negotiation Playbook" sub="Timeline and bond recommendations" fullWidth tint="#FFFBEB" border="#FDE68A" textColor="#92400E" />
             </div>
           </div>
 

@@ -80,6 +80,7 @@ const models = [
   { id: "m2", tag: "M2", href: "/models/document-completeness", name: "Document Completeness", tech: "XGBoost + SHAP", metric: "F1 0.99", desc: "Five independent XGBoost classifiers detect presence of mandatory dispute documents, with SHAP attribution for every prediction." },
   { id: "m3", tag: "M3", href: "/models/payment-predictor", name: "Payment Outcome Predictor", tech: "LightGBM + Platt Calibration", metric: "AUC-ROC 0.891", desc: "Calibrated probability of winning a payment dispute. Platt scaling ensures legal defensibility of predicted probabilities." },
   { id: "m4", tag: "M4", href: "/models/rule-engine", name: "Legal Rule Engine", tech: "Deterministic / MSMED Act", metric: "100% exact", desc: "Pure deterministic engine encoding Sections 15 to 22 of MSMED Act. Computes exact compound interest and timeline violations." },
+  { id: "m5", tag: "M5", href: "/models/negotiation-engine", name: "Negotiation Engine", tech: "Deterministic Bands + Gemini Drafting", metric: "Stateful", desc: "Hybrid negotiation engine computing deterministic settlement bands, strategy posture, and controlled Gemini drafting for formal negotiation messages." },
 ];
 
 const apiRoutes = [
@@ -87,6 +88,7 @@ const apiRoutes = [
   { method: "POST", path: "/evaluate-case", svc: "M2 Document Completeness", desc: "Detect 5 mandatory document types, completeness score" },
   { method: "POST", path: "/predict", svc: "M3 Payment Predictor", desc: "Calibrated win probability with SHAP attributions" },
   { method: "POST", path: "/evaluate-case", svc: "M4 Rule Engine", desc: "Exact interest computation per MSMED Act Section 16" },
+  { method: "POST", path: "/api/models/m5-negotiation", svc: "M5 Negotiation Engine", desc: "Settlement bands, strategy, Gemini draft message" },
   { method: "GET", path: "/health", svc: "All services", desc: "Health check and model version info" },
 ];
 
@@ -223,7 +225,7 @@ export default function HomePage() {
       <div style={{ backgroundColor: "#FFFFFF" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
-            {[["4", "In-house Models"], ["0.948", "Best AUC-ROC"], ["< 50ms", "Avg Inference"], ["F1 0.99", "Document Score"]].map(([v, l], i) => (
+            {[["5", "In-house Models"], ["0.948", "Best AUC-ROC"], ["< 50ms", "Avg Inference"], ["F1 0.99", "Document Score"]].map(([v, l], i) => (
               <div key={l} style={{ padding: "20px 28px", borderRight: i < 3 ? "1px solid #F0EFED" : "none" }}>
                 <div style={{ fontSize: 28, fontWeight: 800, color: "#1C1917", letterSpacing: "-0.04em" }}>{v}</div>
                 <div style={{ fontSize: 12.5, color: "#78716C", marginTop: 3, fontWeight: 500 }}>{l}</div>
@@ -283,7 +285,7 @@ export default function HomePage() {
               <div className="label-tag" style={{ marginBottom: 8 }}>Models</div>
               <h2 className="section-h2" style={{ marginBottom: 10 }}>In-House AI Models</h2>
               <p style={{ fontSize: 14, color: "#78716C", maxWidth: 540, lineHeight: 1.65 }}>
-                Four purpose-built models. Zero reliance on general-purpose LLM API calls in the core pipeline.
+                Five purpose-built models. Zero reliance on general-purpose LLM API calls in the core pipeline; LLMs are used only as a constrained drafting layer.
               </p>
             </div>
           </FadeIn>
@@ -376,7 +378,7 @@ export default function HomePage() {
                 <span style={{ fontSize: 15, fontWeight: 700, color: "#78350F", letterSpacing: "-0.02em" }}>Make in India</span>
               </div>
               <p style={{ fontSize: 14, color: "#92400E", lineHeight: 1.7, margin: 0 }}>
-                All four AI models are trained and deployed in-house on Indian infrastructure.
+                All five AI models are trained and deployed in-house on Indian infrastructure.
                 Zero reliance on foreign AI APIs for core intelligence. Hosted on MeghRaj Kubernetes Cluster.
               </p>
             </div>
